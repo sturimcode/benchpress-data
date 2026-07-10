@@ -1,0 +1,5 @@
+{
+  "schemaVersion": "1.0.0",
+  "gpuTiers": { "3070-class": ["RTX 3070"] },
+  "cpuTiers": { "r5-class": ["Ryzen 5 5600X"] }
+}

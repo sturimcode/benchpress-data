@@ -59,7 +59,9 @@
                 "minItems": 2,
                 "items": { "type": ["string", "number", "boolean"] }
               }
-            }
+            },
+            "if": { "properties": { "type": { "const": "enum" } } },
+            "then": { "required": ["fileId", "key", "type", "values"] }
           }
         }
       }

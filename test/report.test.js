@@ -53,3 +53,10 @@ test('rejects a report with no results', () => {
   const result = validateReport(report);
   assert.strictEqual(result.ok, false);
 });
+
+test('rejects a garbage submittedAt value', () => {
+  const report = makeValidReport();
+  report.submittedAt = '2026-99-99garbage';
+  const result = validateReport(report);
+  assert.strictEqual(result.ok, false);
+});

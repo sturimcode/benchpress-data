@@ -30,3 +30,10 @@ test('validateGame rejects unknown top-level keys', () => {
   const result = validateGame(game);
   assert.strictEqual(result.ok, false);
 });
+
+test('validateGame rejects an enum setting missing its values', () => {
+  const game = makeValidGame();
+  delete game.configMap.settings.shadows.values;
+  const result = validateGame(game);
+  assert.strictEqual(result.ok, false);
+});

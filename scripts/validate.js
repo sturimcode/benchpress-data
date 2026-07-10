@@ -28,6 +28,14 @@ function crossCheckGame(game, tiers) {
   const settings = game.configMap.settings;
   const tierNames = new Set(Object.keys(tiers.gpuTiers));
 
+  const seenFileIds = new Set();
+  for (const f of game.configMap.files) {
+    if (seenFileIds.has(f.id)) {
+      errors.push(`duplicate configMap file id "${f.id}"`);
+    }
+    seenFileIds.add(f.id);
+  }
+
   for (const [id, s] of Object.entries(settings)) {
     if (!fileIds.has(s.fileId)) {
       errors.push(`setting "${id}" references unknown fileId "${s.fileId}"`);
@@ -40,8 +48,22 @@ function crossCheckGame(game, tiers) {
       errors.push(`${where} references undeclared setting "${settingId}"`);
       return;
     }
-    if (s.type === 'enum' && s.values && !s.values.includes(value)) {
-      errors.push(`${where}: value "${value}" for "${settingId}" not in declared values`);
+    if (s.type === 'enum') {
+      if (s.values && !s.values.includes(value)) {
+        errors.push(`${where}: value "${value}" for "${settingId}" not in declared values`);
+      }
+    } else if (s.type === 'bool') {
+      if (typeof value !== 'boolean') {
+        errors.push(`${where}: value "${value}" for "${settingId}" must be a boolean`);
+      }
+    } else if (s.type === 'int') {
+      if (!Number.isInteger(value)) {
+        errors.push(`${where}: value "${value}" for "${settingId}" must be an integer`);
+      }
+    } else if (s.type === 'float') {
+      if (typeof value !== 'number') {
+        errors.push(`${where}: value "${value}" for "${settingId}" must be a number`);
+      }
     }
   }
 
@@ -50,7 +72,12 @@ function crossCheckGame(game, tiers) {
     checkValue(entry.settingId, entry.to, 'impactTable');
   }
 
+  const seenRecIds = new Set();
   for (const rec of game.recommendations) {
+    if (seenRecIds.has(rec.id)) {
+      errors.push(`duplicate recommendation id "${rec.id}"`);
+    }
+    seenRecIds.add(rec.id);
     for (const [settingId, value] of Object.entries(rec.settings)) {
       checkValue(settingId, value, `recommendation "${rec.id}"`);
     }
@@ -75,10 +102,23 @@ const validateReport = makeValidator('report.schema.json');
 function validateRepo(rootDir, gameOverride) {
   const { readdirSync, existsSync } = require('node:fs');
   const errors = [];
-  const tiers = JSON.parse(readFileSync(path.join(rootDir, 'tiers.json'), 'utf8'));
 
-  const tiersResult = validateTiers(tiers);
-  errors.push(...tiersResult.errors.map((e) => `tiers.json: ${e}`));
+  function readJsonFile(relFile) {
+    try {
+      return JSON.parse(readFileSync(path.join(rootDir, relFile), 'utf8'));
+    } catch (err) {
+      errors.push(`${relFile}: invalid JSON (${err.message})`);
+      return null;
+    }
+  }
+
+  const tiers = readJsonFile('tiers.json');
+  let tiersOk = false;
+  if (tiers !== null) {
+    const tiersResult = validateTiers(tiers);
+    errors.push(...tiersResult.errors.map((e) => `tiers.json: ${e}`));
+    tiersOk = tiersResult.ok;
+  }
 
   let gameFiles;
   if (gameOverride) {
@@ -89,13 +129,29 @@ function validateRepo(rootDir, gameOverride) {
       .map((f) => path.join('games', f));
   }
 
+  const slugToFile = new Map();
   for (const file of gameFiles) {
-    const game = JSON.parse(readFileSync(path.join(rootDir, file), 'utf8'));
+    const game = readJsonFile(file);
+    if (game === null) continue;
     const shape = validateGame(game);
     errors.push(...shape.errors.map((e) => `${file}: ${e}`));
     if (shape.ok) {
-      const refs = crossCheckGame(game, tiers);
-      errors.push(...refs.errors.map((e) => `${file}: ${e}`));
+      if (!gameOverride) {
+        const slug = game.identity.slug;
+        if (slugToFile.has(slug)) {
+          errors.push(`${file}: identity.slug "${slug}" is already used by ${slugToFile.get(slug)}`);
+        } else {
+          slugToFile.set(slug, file);
+        }
+        const expected = `${slug}.json`;
+        if (path.basename(file) !== expected) {
+          errors.push(`${file}: filename does not match identity.slug (expected ${expected})`);
+        }
+      }
+      if (tiersOk) {
+        const refs = crossCheckGame(game, tiers);
+        errors.push(...refs.errors.map((e) => `${file}: ${e}`));
+      }
     }
   }
 
@@ -104,7 +160,8 @@ function validateRepo(rootDir, gameOverride) {
   if (existsSync(reportsDir)) {
     for (const f of readdirSync(reportsDir).filter((f) => f.endsWith('.json'))) {
       reportCount += 1;
-      const report = JSON.parse(readFileSync(path.join(reportsDir, f), 'utf8'));
+      const report = readJsonFile(path.join('reports', f));
+      if (report === null) continue;
       const result = validateReport(report);
       errors.push(...result.errors.map((e) => `reports/${f}: ${e}`));
     }
@@ -116,6 +173,10 @@ function validateRepo(rootDir, gameOverride) {
 if (require.main === module) {
   const args = process.argv.slice(2);
   const gameFlag = args.indexOf('--game');
+  if (gameFlag !== -1 && !args[gameFlag + 1]) {
+    console.error('--game requires a file path');
+    process.exit(1);
+  }
   const gameOverride = gameFlag === -1 ? null : args[gameFlag + 1];
   const { errors, gameCount, reportCount } = validateRepo(path.join(__dirname, '..'), gameOverride);
   console.log(`games checked: ${gameCount}, reports checked: ${reportCount}`);

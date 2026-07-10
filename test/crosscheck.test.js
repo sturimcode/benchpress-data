@@ -62,3 +62,50 @@ test('rejects an unknown GPU tier in baselines or recommendations', () => {
   assert.strictEqual(result.ok, false);
   assert.match(result.errors.join(' '), /unknown tier/);
 });
+
+test('rejects a bool setting given a non-boolean value', () => {
+  const game = makeValidGame();
+  game.configMap.settings.vsync = { fileId: 'main', key: '/graphics/Vsync', type: 'bool' };
+  game.recommendations[0].settings.vsync = 'banana';
+  const result = crossCheckGame(game, tiers);
+  assert.strictEqual(result.ok, false);
+  assert.match(result.errors.join(' '), /must be a boolean/);
+});
+
+test('rejects an int setting given a non-integer value', () => {
+  const game = makeValidGame();
+  game.configMap.settings.fpsCap = { fileId: 'main', key: '/graphics/FpsCap', type: 'int' };
+  game.recommendations[0].settings.fpsCap = 2.5;
+  const result = crossCheckGame(game, tiers);
+  assert.strictEqual(result.ok, false);
+  assert.match(result.errors.join(' '), /must be an integer/);
+});
+
+test('accepts valid typed bool, int, and float values', () => {
+  const game = makeValidGame();
+  game.configMap.settings.vsync = { fileId: 'main', key: '/graphics/Vsync', type: 'bool' };
+  game.configMap.settings.fpsCap = { fileId: 'main', key: '/graphics/FpsCap', type: 'int' };
+  game.configMap.settings.renderScale = { fileId: 'main', key: '/graphics/Scale', type: 'float' };
+  game.recommendations[0].settings.vsync = true;
+  game.recommendations[0].settings.fpsCap = 60;
+  game.recommendations[0].settings.renderScale = 0.75;
+  const result = crossCheckGame(game, tiers);
+  assert.deepStrictEqual(result.errors, []);
+  assert.strictEqual(result.ok, true);
+});
+
+test('rejects duplicate recommendation ids', () => {
+  const game = makeValidGame();
+  game.recommendations.push(JSON.parse(JSON.stringify(game.recommendations[0])));
+  const result = crossCheckGame(game, tiers);
+  assert.strictEqual(result.ok, false);
+  assert.match(result.errors.join(' '), /duplicate recommendation id/);
+});
+
+test('rejects duplicate configMap file ids', () => {
+  const game = makeValidGame();
+  game.configMap.files.push(JSON.parse(JSON.stringify(game.configMap.files[0])));
+  const result = crossCheckGame(game, tiers);
+  assert.strictEqual(result.ok, false);
+  assert.match(result.errors.join(' '), /duplicate configMap file id/);
+});

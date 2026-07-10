@@ -19,3 +19,12 @@ test('validate CLI fails on a broken game file', () => {
   );
   assert.strictEqual(run.status, 1);
 });
+
+test('validate CLI errors when --game has no following value', () => {
+  const run = spawnSync('node', ['scripts/validate.js', '--game'], {
+    cwd: root,
+    encoding: 'utf8'
+  });
+  assert.strictEqual(run.status, 1);
+  assert.match(run.stderr, /--game requires a file path/);
+});

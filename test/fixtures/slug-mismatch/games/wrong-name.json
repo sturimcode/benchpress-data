@@ -1,0 +1,57 @@
+{
+  "schemaVersion": "1.0.0",
+  "identity": {
+    "name": "Example Game",
+    "slug": "example-game",
+    "steamAppId": 12345,
+    "engine": "Example Engine",
+    "storeVersion": "steam",
+    "builtInBenchmark": true,
+    "processName": "Example.exe",
+    "configVerified": false
+  },
+  "configMap": {
+    "files": [
+      {
+        "id": "main",
+        "path": "<winLocalAppData>/Example/settings.json",
+        "format": "json",
+        "overwrittenOnLaunch": false,
+        "steamCloudSynced": false,
+        "antiCheatSensitive": false
+      }
+    ],
+    "settings": {
+      "shadows": {
+        "fileId": "main",
+        "key": "/graphics/Shadows",
+        "type": "enum",
+        "values": ["Low", "Medium", "High"]
+      }
+    }
+  },
+  "impactTable": [
+    {
+      "settingId": "shadows",
+      "from": "High",
+      "to": "Medium",
+      "estGainPct": 5,
+      "visualNote": "Softer shadow edges at a distance. Hard to spot in motion.",
+      "source": { "name": "Example source", "url": "https://example.com/guide" }
+    }
+  ],
+  "baselines": [
+    { "tier": "3070-class", "resolution": "2560x1440", "preset": "High", "estAvgFps": 65 }
+  ],
+  "recommendations": [
+    {
+      "id": "3070-1440p-60",
+      "tier": "3070-class",
+      "resolution": "2560x1440",
+      "upscalingStance": "upscaling",
+      "estAvgFps": 66,
+      "confidence": "extrapolated",
+      "settings": { "shadows": "Medium" }
+    }
+  ]
+}

@@ -45,3 +45,4 @@ they replace borrowed estimates.
 
 Code (schemas and scripts): MIT. Data (`games/`, `reports/`, `tiers.json`):
 CC BY 4.0. Use the data anywhere, keep the attribution chain intact.
+See LICENSE and LICENSE-DATA.
