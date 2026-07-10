@@ -1,0 +1,195 @@
+{
+  "schemaVersion": "1.0.0",
+  "identity": {
+    "name": "Cyberpunk 2077",
+    "slug": "cyberpunk-2077",
+    "steamAppId": 1091500,
+    "engine": "REDengine 4",
+    "storeVersion": "steam",
+    "builtInBenchmark": true,
+    "processName": "Cyberpunk2077.exe",
+    "configVerified": false
+  },
+  "configMap": {
+    "files": [
+      {
+        "id": "usersettings",
+        "path": "<winLocalAppData>/CD Projekt Red/Cyberpunk 2077/UserSettings.json",
+        "format": "cdpr-usersettings",
+        "overwrittenOnLaunch": false,
+        "steamCloudSynced": true,
+        "antiCheatSensitive": false
+      }
+    ],
+    "settings": {
+      "dlss": {
+        "fileId": "usersettings",
+        "key": "/graphics/dynamicresolution/DLSS",
+        "type": "enum",
+        "values": ["Off", "Auto", "Ultra Performance", "Performance", "Balanced", "Quality"]
+      },
+      "volumetric-fog": {
+        "fileId": "usersettings",
+        "key": "/graphics/advanced/VolumetricFogResolution",
+        "type": "enum",
+        "values": ["Low", "Medium", "High", "Ultra"]
+      },
+      "volumetric-clouds": {
+        "fileId": "usersettings",
+        "key": "/graphics/advanced/VolumetricCloudsQuality",
+        "type": "enum",
+        "values": ["Off", "Medium", "High", "Ultra"]
+      },
+      "ssr": {
+        "fileId": "usersettings",
+        "key": "/graphics/advanced/ScreenSpaceReflectionsQuality",
+        "type": "enum",
+        "values": ["Off", "Low", "Medium", "High", "Ultra", "Psycho"]
+      },
+      "shadow-resolution": {
+        "fileId": "usersettings",
+        "key": "/graphics/advanced/CascadedShadowsResolution",
+        "type": "enum",
+        "values": ["Low", "Medium", "High"]
+      },
+      "ambient-occlusion": {
+        "fileId": "usersettings",
+        "key": "/graphics/advanced/AmbientOcclusion",
+        "type": "enum",
+        "values": ["Off", "Low", "Medium", "High"]
+      },
+      "crowd-density": {
+        "fileId": "usersettings",
+        "key": "/gameplay/misc/CrowdDensity",
+        "type": "enum",
+        "values": ["Low", "Medium", "High"]
+      },
+      "texture-quality": {
+        "fileId": "usersettings",
+        "key": "/graphics/basic/TextureQuality",
+        "type": "enum",
+        "values": ["Low", "Medium", "High"]
+      }
+    }
+  },
+  "impactTable": [
+    {
+      "settingId": "dlss",
+      "from": "Off",
+      "to": "Quality",
+      "estGainPct": 18,
+      "visualNote": "Slight softening on fine detail at 1440p. Most players cannot tell in motion.",
+      "source": { "name": "Digital Foundry optimized settings", "url": "https://www.eurogamer.net/digitalfoundry-2020-cyberpunk-2077-pc-best-settings-tested" }
+    },
+    {
+      "settingId": "volumetric-fog",
+      "from": "Ultra",
+      "to": "Medium",
+      "estGainPct": 7,
+      "visualNote": "Fog banding up close in dense scenes. Minor at normal play distance.",
+      "source": { "name": "Digital Foundry optimized settings", "url": "https://www.eurogamer.net/digitalfoundry-2020-cyberpunk-2077-pc-best-settings-tested" }
+    },
+    {
+      "settingId": "ssr",
+      "from": "Ultra",
+      "to": "Medium",
+      "estGainPct": 6,
+      "visualNote": "Reflections on wet roads get grainier. Visible on close inspection.",
+      "source": { "name": "r/OptimizedGaming Cyberpunk guide", "url": "https://www.reddit.com/r/OptimizedGaming/" }
+    },
+    {
+      "settingId": "shadow-resolution",
+      "from": "High",
+      "to": "Medium",
+      "estGainPct": 4,
+      "visualNote": "Softer distant shadow edges. Hard to spot outside screenshots.",
+      "source": { "name": "r/OptimizedGaming Cyberpunk guide", "url": "https://www.reddit.com/r/OptimizedGaming/" }
+    },
+    {
+      "settingId": "volumetric-clouds",
+      "from": "Ultra",
+      "to": "Medium",
+      "estGainPct": 3,
+      "visualNote": "Less detailed cloud shapes. Only matters when looking at the sky.",
+      "source": { "name": "Digital Foundry optimized settings", "url": "https://www.eurogamer.net/digitalfoundry-2020-cyberpunk-2077-pc-best-settings-tested" }
+    },
+    {
+      "settingId": "crowd-density",
+      "from": "High",
+      "to": "Medium",
+      "estGainPct": 3,
+      "visualNote": "Fewer pedestrians downtown. Helps most on CPU-limited rigs.",
+      "source": { "name": "r/OptimizedGaming Cyberpunk guide", "url": "https://www.reddit.com/r/OptimizedGaming/" }
+    },
+    {
+      "settingId": "ambient-occlusion",
+      "from": "High",
+      "to": "Medium",
+      "estGainPct": 2,
+      "visualNote": "Slightly flatter contact shadows in corners and under objects.",
+      "source": { "name": "r/OptimizedGaming Cyberpunk guide", "url": "https://www.reddit.com/r/OptimizedGaming/" }
+    }
+  ],
+  "baselines": [
+    { "tier": "3060-class", "resolution": "1920x1080", "preset": "High", "estAvgFps": 62 },
+    { "tier": "3070-class", "resolution": "2560x1440", "preset": "High", "estAvgFps": 55 },
+    { "tier": "3080-class", "resolution": "2560x1440", "preset": "High", "estAvgFps": 72 },
+    { "tier": "4090-class", "resolution": "3840x2160", "preset": "High", "estAvgFps": 78 }
+  ],
+  "recommendations": [
+    {
+      "id": "3070-1440p-60-upscaling",
+      "tier": "3070-class",
+      "resolution": "2560x1440",
+      "upscalingStance": "upscaling",
+      "estAvgFps": 66,
+      "confidence": "extrapolated",
+      "settings": {
+        "dlss": "Quality",
+        "volumetric-fog": "Medium",
+        "volumetric-clouds": "Medium",
+        "ssr": "Medium",
+        "shadow-resolution": "Medium",
+        "ambient-occlusion": "Medium",
+        "crowd-density": "Medium",
+        "texture-quality": "High"
+      }
+    },
+    {
+      "id": "3070-1440p-60-native",
+      "tier": "3070-class",
+      "resolution": "2560x1440",
+      "upscalingStance": "native",
+      "estAvgFps": 58,
+      "confidence": "extrapolated",
+      "settings": {
+        "dlss": "Off",
+        "volumetric-fog": "Medium",
+        "volumetric-clouds": "Medium",
+        "ssr": "Medium",
+        "shadow-resolution": "Medium",
+        "ambient-occlusion": "Low",
+        "crowd-density": "Medium",
+        "texture-quality": "High"
+      }
+    },
+    {
+      "id": "3060-1080p-60-upscaling",
+      "tier": "3060-class",
+      "resolution": "1920x1080",
+      "upscalingStance": "upscaling",
+      "estAvgFps": 68,
+      "confidence": "extrapolated",
+      "settings": {
+        "dlss": "Quality",
+        "volumetric-fog": "Medium",
+        "volumetric-clouds": "Medium",
+        "ssr": "Medium",
+        "shadow-resolution": "Medium",
+        "ambient-occlusion": "Low",
+        "crowd-density": "Medium",
+        "texture-quality": "High"
+      }
+    }
+  ]
+}

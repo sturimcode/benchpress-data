@@ -72,4 +72,58 @@ const validateTiers = makeValidator('tiers.schema.json');
 
 const validateReport = makeValidator('report.schema.json');
 
-module.exports = { validateGame, crossCheckGame, validateTiers, validateReport };
+function validateRepo(rootDir, gameOverride) {
+  const { readdirSync, existsSync } = require('node:fs');
+  const errors = [];
+  const tiers = JSON.parse(readFileSync(path.join(rootDir, 'tiers.json'), 'utf8'));
+
+  const tiersResult = validateTiers(tiers);
+  errors.push(...tiersResult.errors.map((e) => `tiers.json: ${e}`));
+
+  let gameFiles;
+  if (gameOverride) {
+    gameFiles = [gameOverride];
+  } else {
+    gameFiles = readdirSync(path.join(rootDir, 'games'))
+      .filter((f) => f.endsWith('.json'))
+      .map((f) => path.join('games', f));
+  }
+
+  for (const file of gameFiles) {
+    const game = JSON.parse(readFileSync(path.join(rootDir, file), 'utf8'));
+    const shape = validateGame(game);
+    errors.push(...shape.errors.map((e) => `${file}: ${e}`));
+    if (shape.ok) {
+      const refs = crossCheckGame(game, tiers);
+      errors.push(...refs.errors.map((e) => `${file}: ${e}`));
+    }
+  }
+
+  let reportCount = 0;
+  const reportsDir = path.join(rootDir, 'reports');
+  if (existsSync(reportsDir)) {
+    for (const f of readdirSync(reportsDir).filter((f) => f.endsWith('.json'))) {
+      reportCount += 1;
+      const report = JSON.parse(readFileSync(path.join(reportsDir, f), 'utf8'));
+      const result = validateReport(report);
+      errors.push(...result.errors.map((e) => `reports/${f}: ${e}`));
+    }
+  }
+
+  return { errors, gameCount: gameFiles.length, reportCount };
+}
+
+if (require.main === module) {
+  const args = process.argv.slice(2);
+  const gameFlag = args.indexOf('--game');
+  const gameOverride = gameFlag === -1 ? null : args[gameFlag + 1];
+  const { errors, gameCount, reportCount } = validateRepo(path.join(__dirname, '..'), gameOverride);
+  console.log(`games checked: ${gameCount}, reports checked: ${reportCount}`);
+  if (errors.length > 0) {
+    for (const e of errors) console.error(`FAIL ${e}`);
+    process.exit(1);
+  }
+  console.log('all valid');
+}
+
+module.exports = { validateGame, crossCheckGame, validateTiers, validateReport, validateRepo };
