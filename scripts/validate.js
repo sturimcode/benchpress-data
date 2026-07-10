@@ -68,4 +68,6 @@ function crossCheckGame(game, tiers) {
   return { ok: errors.length === 0, errors };
 }
 
-module.exports = { validateGame, crossCheckGame };
+const validateTiers = makeValidator('tiers.schema.json');
+
+module.exports = { validateGame, crossCheckGame, validateTiers };

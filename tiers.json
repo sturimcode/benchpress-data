@@ -1,0 +1,18 @@
+{
+  "schemaVersion": "1.0.0",
+  "gpuTiers": {
+    "1060-class": ["GTX 1060 6GB", "GTX 1650 Super", "RX 580 8GB"],
+    "2060-class": ["RTX 2060", "GTX 1080", "RX 5600 XT", "RTX 3050"],
+    "3060-class": ["RTX 3060", "RTX 2070 Super", "RX 6600 XT", "Arc A750"],
+    "3070-class": ["RTX 3070", "RTX 3070 Ti", "RTX 2080 Ti", "RX 6700 XT", "RTX 4060 Ti"],
+    "3080-class": ["RTX 3080", "RX 6800 XT", "RTX 4070", "RX 7800 XT"],
+    "4080-class": ["RTX 4080", "RX 7900 XTX", "RTX 4070 Ti Super", "RTX 5070 Ti"],
+    "4090-class": ["RTX 4090", "RTX 5080", "RTX 5090"]
+  },
+  "cpuTiers": {
+    "budget-class": ["Ryzen 5 3600", "Core i5-10400F"],
+    "r5-class": ["Ryzen 5 5600X", "Ryzen 5 7600", "Core i5-12400F", "Core i5-13400F"],
+    "r7-class": ["Ryzen 7 5800X3D", "Ryzen 7 7700X", "Core i7-12700K", "Core i7-13700K"],
+    "x3d-class": ["Ryzen 7 7800X3D", "Ryzen 7 9800X3D", "Core i9-14900K"]
+  }
+}
