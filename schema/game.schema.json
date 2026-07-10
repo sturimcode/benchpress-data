@@ -1,0 +1,129 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "BenchPress game file",
+  "type": "object",
+  "required": ["schemaVersion", "identity", "configMap", "impactTable", "baselines", "recommendations"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "type": "string", "pattern": "^1\\.\\d+\\.\\d+$" },
+    "identity": {
+      "type": "object",
+      "required": ["name", "slug", "steamAppId", "engine", "storeVersion", "builtInBenchmark", "processName", "configVerified"],
+      "additionalProperties": false,
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "slug": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+        "steamAppId": { "type": "integer", "minimum": 1 },
+        "engine": { "type": "string", "minLength": 1 },
+        "storeVersion": { "const": "steam" },
+        "builtInBenchmark": { "type": "boolean" },
+        "processName": { "type": "string", "pattern": "\\.exe$" },
+        "configVerified": { "type": "boolean" }
+      }
+    },
+    "configMap": {
+      "type": "object",
+      "required": ["files", "settings"],
+      "additionalProperties": false,
+      "properties": {
+        "files": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "required": ["id", "path", "format", "overwrittenOnLaunch", "steamCloudSynced", "antiCheatSensitive"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "type": "string", "minLength": 1 },
+              "path": { "type": "string", "minLength": 1 },
+              "format": { "enum": ["json", "ini", "xml", "cfg", "cdpr-usersettings"] },
+              "overwrittenOnLaunch": { "type": "boolean" },
+              "steamCloudSynced": { "type": "boolean" },
+              "antiCheatSensitive": { "type": "boolean" }
+            }
+          }
+        },
+        "settings": {
+          "type": "object",
+          "minProperties": 1,
+          "additionalProperties": {
+            "type": "object",
+            "required": ["fileId", "key", "type"],
+            "additionalProperties": false,
+            "properties": {
+              "fileId": { "type": "string", "minLength": 1 },
+              "key": { "type": "string", "minLength": 1 },
+              "type": { "enum": ["enum", "bool", "int", "float"] },
+              "values": {
+                "type": "array",
+                "minItems": 2,
+                "items": { "type": ["string", "number", "boolean"] }
+              }
+            }
+          }
+        }
+      }
+    },
+    "impactTable": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["settingId", "from", "to", "estGainPct", "visualNote", "source"],
+        "additionalProperties": false,
+        "properties": {
+          "settingId": { "type": "string", "minLength": 1 },
+          "from": { "type": ["string", "number", "boolean"] },
+          "to": { "type": ["string", "number", "boolean"] },
+          "estGainPct": { "type": "number", "minimum": -50, "maximum": 100 },
+          "visualNote": { "type": "string", "minLength": 1 },
+          "source": {
+            "type": "object",
+            "required": ["name", "url"],
+            "additionalProperties": false,
+            "properties": {
+              "name": { "type": "string", "minLength": 1 },
+              "url": { "type": "string", "pattern": "^https://" }
+            }
+          }
+        }
+      }
+    },
+    "baselines": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["tier", "resolution", "preset", "estAvgFps"],
+        "additionalProperties": false,
+        "properties": {
+          "tier": { "type": "string", "minLength": 1 },
+          "resolution": { "type": "string", "pattern": "^\\d{3,4}x\\d{3,4}$" },
+          "preset": { "type": "string", "minLength": 1 },
+          "estAvgFps": { "type": "number", "exclusiveMinimum": 0 }
+        }
+      }
+    },
+    "recommendations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": ["id", "tier", "resolution", "upscalingStance", "estAvgFps", "confidence", "settings"],
+        "additionalProperties": false,
+        "properties": {
+          "id": { "type": "string", "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$" },
+          "tier": { "type": "string", "minLength": 1 },
+          "resolution": { "type": "string", "pattern": "^\\d{3,4}x\\d{3,4}$" },
+          "upscalingStance": { "enum": ["native", "upscaling", "framegen"] },
+          "estAvgFps": { "type": "number", "exclusiveMinimum": 0 },
+          "confidence": { "enum": ["measured", "extrapolated"] },
+          "settings": {
+            "type": "object",
+            "minProperties": 1,
+            "additionalProperties": { "type": ["string", "number", "boolean"] }
+          }
+        }
+      }
+    }
+  }
+}

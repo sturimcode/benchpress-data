@@ -1,0 +1,14 @@
+{
+  "name": "benchpress-data",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Open dataset of per-game, per-setting PC performance costs for BenchPress",
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "validate": "node scripts/validate.js",
+    "bundle": "node scripts/build-bundle.js"
+  },
+  "devDependencies": {
+    "ajv": "^8.17.1"
+  }
+}
