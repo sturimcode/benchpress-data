@@ -1,6 +1,6 @@
 # benchpress-data
 
-The open dataset behind [BenchPress](https://github.com/benchpress-app/benchpress),
+The open dataset behind [BenchPress](https://github.com/sturimcode/benchpress),
 a Windows app that recommends, applies, and verifies PC game settings for your
 hardware and target FPS.
 
