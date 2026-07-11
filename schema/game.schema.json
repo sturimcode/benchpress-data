@@ -18,7 +18,8 @@
         "storeVersion": { "const": "steam" },
         "builtInBenchmark": { "type": "boolean" },
         "processName": { "type": "string", "pattern": "\\.exe$" },
-        "configVerified": { "type": "boolean" }
+        "configVerified": { "type": "boolean" },
+        "benchmarkDurationSec": { "type": "integer", "minimum": 30, "maximum": 600 }
       }
     },
     "configMap": {

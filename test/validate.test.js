@@ -37,3 +37,19 @@ test('validateGame rejects an enum setting missing its values', () => {
   const result = validateGame(game);
   assert.strictEqual(result.ok, false);
 });
+
+test('validateGame accepts an in-range benchmarkDurationSec', () => {
+  const game = makeValidGame();
+  game.identity.benchmarkDurationSec = 64;
+  const result = validateGame(game);
+  assert.deepStrictEqual(result.errors, []);
+  assert.strictEqual(result.ok, true);
+});
+
+test('validateGame rejects an out-of-range benchmarkDurationSec', () => {
+  const game = makeValidGame();
+  game.identity.benchmarkDurationSec = 20;
+  const result = validateGame(game);
+  assert.strictEqual(result.ok, false);
+  assert.match(result.errors.join(' '), /benchmarkDurationSec/);
+});

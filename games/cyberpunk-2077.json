@@ -8,7 +8,8 @@
     "storeVersion": "steam",
     "builtInBenchmark": true,
     "processName": "Cyberpunk2077.exe",
-    "configVerified": false
+    "configVerified": false,
+    "benchmarkDurationSec": 64
   },
   "configMap": {
     "files": [
