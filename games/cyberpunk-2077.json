@@ -25,7 +25,7 @@
     "settings": {
       "dlss": {
         "fileId": "usersettings",
-        "key": "/graphics/dynamicresolution/DLSS",
+        "key": "/graphics/presets/DLSS",
         "type": "enum",
         "values": ["Off", "Auto", "Ultra Performance", "Performance", "Balanced", "Quality"]
       },
@@ -45,7 +45,7 @@
         "fileId": "usersettings",
         "key": "/graphics/advanced/ScreenSpaceReflectionsQuality",
         "type": "enum",
-        "values": ["Off", "Low", "Medium", "High", "Ultra", "Psycho"]
+        "values": ["Off", "Low", "Medium", "High", "Ultra", "Insane"]
       },
       "shadow-resolution": {
         "fileId": "usersettings",
@@ -61,13 +61,13 @@
       },
       "crowd-density": {
         "fileId": "usersettings",
-        "key": "/gameplay/misc/CrowdDensity",
+        "key": "/gameplay/performance/CrowdDensity",
         "type": "enum",
         "values": ["Low", "Medium", "High"]
       },
       "texture-quality": {
         "fileId": "usersettings",
-        "key": "/graphics/basic/TextureQuality",
+        "key": "/graphics/presets/TextureQuality",
         "type": "enum",
         "values": ["Low", "Medium", "High"]
       }
