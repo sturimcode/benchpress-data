@@ -18,6 +18,8 @@ test('validate CLI fails on a broken game file', () => {
     { cwd: root, encoding: 'utf8' }
   );
   assert.strictEqual(run.status, 1);
+  assert.match(run.stdout, /games checked: 1, reports checked: \d+/);
+  assert.match(run.stderr, /FAIL test[\\/]fixtures[\\/]broken-game\.json:/);
 });
 
 test('validate CLI errors when --game has no following value', () => {
